@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:login_basic/screen/register.dart';
-import 'package:login_basic/screen/profile_screen.dart';
+import 'package:login_basic/screen/Register.dart';
+import 'package:login_basic/screen/profileScreen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,14 +11,20 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // Create the testfiled controller
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  // Create the controllers
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  // Create passToggle to check show or not show password
   bool passToggle = false;
+
+  // Create rememberMe to remember or not remember password
   bool rememberMe = false;
+
+  // Create formKey for control form
   final formKey = GlobalKey<FormState>();
 
-  // login function
+  // Login function
   static Future<User?> loginUsingEmailPassword(
       {required String email,
       required String password,
@@ -31,12 +37,13 @@ class _LoginScreenState extends State<LoginScreen> {
       user = userCredential.user;
     } on FirebaseAuthException catch (e) {
       if (e.code == "user-not-found") {
-        print("No User found for that email");
+        print("No user found for that email");
       }
     }
     return user;
   }
 
+  // After create widget passToggle = true
   @override
   void initState() {
     super.initState();
@@ -53,27 +60,40 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Text 1
               const Text(
                 "Task 1",
+                // Text 1 Style
                 style: TextStyle(
                     color: Color.fromARGB(255, 0, 0, 0),
                     fontSize: 28.0,
                     fontWeight: FontWeight.bold),
               ),
+
+              // Text 2
               const Text("Login Basic",
+                  // Text 2 Style
                   style: TextStyle(
                     color: Color.fromARGB(255, 0, 0, 0),
                     fontSize: 44.0,
                     fontWeight: FontWeight.bold,
                   )),
+
+              // Blank
               const SizedBox(
                 height: 30.0,
               ),
+
+              // Email
               TextFormField(
                 validator: (value) {
+
+                  // Validator check email not empty
                   if (value!.isEmpty) {
                     return "Enter your email";
                   }
+
+                  // Validator check email valid
                   bool emailValid = RegExp(
                           r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                       .hasMatch(value);
@@ -82,8 +102,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                   return null;
                 },
-                controller: _emailController,
+
+                // Email controller
+                controller: emailController,
+
+                // Keyboard type
                 keyboardType: TextInputType.emailAddress,
+
+                // Decoration (Input)
                 decoration: const InputDecoration(
                     labelText: "Email",
                     border: OutlineInputBorder(),
@@ -91,27 +117,43 @@ class _LoginScreenState extends State<LoginScreen> {
                       Icons.mail,
                     )),
               ),
+
+              // Blank
               const SizedBox(
                 height: 10.0,
               ),
+
+              // Password
               TextFormField(
                 validator: (value) {
+
+                  // Validator check password not empty
                   if (value!.isEmpty) {
                     return "Enter your password";
                   }
                   return null;
                 },
-                controller: _passwordController,
+
+                // Password controller
+                controller: passwordController,
+
+                // Control show or not show by passToggle
                 obscureText: passToggle,
+
+                // Decoration (Input)
                 decoration: InputDecoration(
                   labelText: "Password",
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(
                     Icons.lock,
                   ),
+
+                  // Icon button
                   suffixIcon: IconButton(
                     icon: Icon(
                         passToggle ? Icons.visibility_off : Icons.visibility),
+
+                    // When click icon change passToggle true => false or false => true
                     onPressed: () {
                       setState(() {
                         passToggle = !passToggle;
@@ -124,13 +166,19 @@ class _LoginScreenState extends State<LoginScreen> {
                 keyboardType: TextInputType.visiblePassword,
                 textInputAction: TextInputAction.done,
               ),
+
+              // Remember me checker
               Row(
                 children: [
-                  Checkbox(value: rememberMe, onChanged: (value){
-                    setState(() {
-                      rememberMe = value as bool;
-                    });
-                  }),
+                  Checkbox(
+                      value: rememberMe,
+                      onChanged: (value) {
+                        setState(() {
+                          rememberMe = value as bool;
+                        });
+                      }),
+
+                  // Remember me text
                   Text(
                     "Remember me",
                     style: TextStyle(
@@ -139,38 +187,62 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ],
               ),
+
+              // Blank
               const SizedBox(
                 height: 15.0,
               ),
+
+              // Button
               Container(
                 width: double.infinity,
+
+                // Button Style
                 child: RawMaterialButton(
                     fillColor: const Color.fromARGB(255, 0, 106, 255),
                     elevation: 0.0,
                     padding: const EdgeInsets.symmetric(vertical: 20.0),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12.0)),
+
+                    // When onPressed
                     onPressed: () async {
                       User? user = await loginUsingEmailPassword(
-                          email: _emailController.text,
-                          password: _passwordController.text,
+                          email: emailController.text,
+                          password: passwordController.text,
                           context: context);
                       print(user);
-                      if (formKey.currentState!.validate() && (user != null) && (rememberMe == false)) {
-                          _emailController.clear();
-                          _passwordController.clear();
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return ProfileScreen();
-                          }));
+
+                      // Validation check user != null and rememberMe = false
+                      if (formKey.currentState!.validate() &&
+                          (user != null) &&
+                          (rememberMe == false)) {
+                        
+                        // When rememberMe = false clear all input
+                        emailController.clear();
+                        passwordController.clear();
+
+                        // Navigator
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return ProfileScreen();
+                        }));
                       }
-                      if (formKey.currentState!.validate() && (user != null) && (rememberMe == true)) {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return ProfileScreen();
-                          }));
+
+                      // Validation check user != null and rememberMe = true
+                      if (formKey.currentState!.validate() &&
+                          (user != null) &&
+                          (rememberMe == true)) {
+                            
+                        // Navigator
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return ProfileScreen();
+                        }));
                       }
                     },
+
+                    // Text Style
                     child: const Text(
                       "Log In",
                       style: TextStyle(

@@ -36,17 +36,23 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+      // Top Bar
       appBar: AppBar(
         title: Text("Home"),
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 0, 106, 255),
         ),
+
+      // Use FutureBuilder for render widget in login.dart => class LoginScreen 
       body: FutureBuilder(
         future: _initializeFirebase(),
         builder: (context, AsyncSnapshot snapshot) {
           if(snapshot.connectionState == ConnectionState.done){
             return LoginScreen();
           }
+          
+          // Render widget in login.dart => class LoginScreen position center
           return const Center(
             child: CircularProgressIndicator(),
           );
