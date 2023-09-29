@@ -33,4 +33,5 @@ build\app\outputs\flutter-apk\app-release.apk
 4. จากนั้นเลือก "แอปพลิเคชันที่ดาวน์โหลด" หรือ "Downloaded Apps" และค้นหาไฟล์ APK ที่คุณคัดลอกมา จากนั้นคุณสามารถเลือกและติดตั้งแอป APK ได้จากนั้น
 
 ***Emulator***
+
 ถ้าต้องการใช้งาน APK ให้ลาก app-release.apk ไปใส่ในหน้าจอของ Emulator
