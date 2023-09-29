@@ -21,9 +21,14 @@ flutter pub get
 
 ## APK
 
-ในส่วนของ APK นั้นจะอยู่ในส่วนของ
+ในส่วนของ APK จะอยู่ที่
 ```bash
 build\app\outputs\flutter-apk\app-release.apk
+```
+
+ถ้าต้องการสร้าง APK ให้ใช้คำสั่ง
+```bash
+flutter build apk --build-name=1.0 --build-number=1  
 ```
 
 ***Android***
